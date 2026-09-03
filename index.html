@@ -4,97 +4,203 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Make a Wish - Anniversary</title>
-    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Kmitl&family=Prompt:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
+            font-family: 'Prompt', sans-serif;
         }
         body {
-            font-family: 'Fredoka', cursive, sans-serif;
             background-color: #fff0f5;
             display: flex;
             justify-content: center;
             align-items: center;
+            width: 100vw;
             height: 100vh;
             overflow: hidden;
+            position: relative;
         }
-        .page {
+
+        /* จำลองขนาดหน้าจอมือถือแนวตั้งแบบเต็มจอ */
+        .mobile-container {
+            width: 100%;
+            max-width: 430px;
+            height: 100%;
+            max-height: 932px;
+            background-color: #fff0f5;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            padding: 30px 20px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 0 20px rgba(255, 182, 193, 0.5);
+        }
+
+        /* ตกแต่งพื้นหลังด้วยหัวใจและอิโมจิ ลอยขึ้นมา */
+        .floating-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: 1;
+        }
+        .float-item {
+            position: absolute;
+            bottom: -50px;
+            font-size: 1.5rem;
+            animation: floatUp 6s infinite linear;
+            opacity: 0.6;
+        }
+        @keyframes floatUp {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 0;
+            }
+            20% {
+                opacity: 0.8;
+            }
+            100% {
+                transform: translateY(-105vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* ส่วนหัวข้อ */
+        .header-section {
+            z-index: 2;
+            text-align: center;
+            margin-top: 10px;
+        }
+        h2 {
+            color: #ff4d6d;
+            font-size: 1.6rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+            text-shadow: 1px 1px 2px rgba(255,255,255,0.8);
+        }
+        p {
+            color: #d85c78;
+            font-size: 0.95rem;
+            font-weight: 600;
+        }
+
+        /* พื้นที่เค้กเต็มจอ */
+        #cake-container {
+            position: relative;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            flex-grow: 1;
+            z-index: 2;
+            margin: 10px 0;
+        }
+        .cake-base {
+            width: 90%;
+            max-width: 360px;
+            height: auto;
+            display: block;
+            user-select: none;
+            filter: drop-shadow(0 8px 16px rgba(0,0,0,0.08));
+        }
+
+        /* ส่วนล่าง แสดงจำนวนเทียนและปุ่ม */
+        .footer-section {
+            z-index: 2;
+            width: 100%;
+            text-align: center;
+            min-height: 80px;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: 40px 20px;
-            width: 100%;
-            height: 100%;
-            position: relative;
-            text-align: center;
-        }
-        h2 {
-            color: #ff4d6d;
-            margin-bottom: 10px;
-        }
-        p {
-            color: #666;
-            font-size: 0.95rem;
-            margin-bottom: 20px;
-        }
-        #cake-container {
-            position: relative;
-            cursor: pointer;
-            display: inline-block;
-        }
-        #cake-container img.cake-base {
-            width: 240px;
-            display: block;
-            user-select: none;
         }
         #candle-status {
-            margin-top: 25px;
-            color: #ff758f;
-            font-weight: 600;
+            color: #ff4d6d;
+            font-weight: 700;
             font-size: 1.1rem;
+            margin-bottom: 10px;
         }
         .next-btn {
             display: none;
-            margin-top: 20px;
-            padding: 12px 25px;
-            border-radius: 25px;
+            padding: 12px 30px;
+            border-radius: 30px;
             border: none;
-            background: #ff4d6d;
+            background: linear-gradient(135deg, #ff758f, #ff4d6d);
             color: white;
-            font-size: 1rem;
+            font-size: 1.05rem;
             font-weight: bold;
             cursor: pointer;
-            box-shadow: 0 4px 15px rgba(255,77,109,0.3);
-            transition: transform 0.2s;
+            box-shadow: 0 6px 20px rgba(255,77,109,0.4);
+            transition: transform 0.2s, box-shadow 0.2s;
+            animation: bounceBtn 1.5s infinite;
         }
         .next-btn:active {
             transform: scale(0.95);
+        }
+        @keyframes bounceBtn {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
         }
     </style>
 </head>
 <body>
 
-    <div id="page6" class="page">
-        <h2>Make a Wish! 🎂</h2>
-        <p>จิ้มที่เค้กเพื่อปักเทียนวันครบรอบของเรากันนะ (ปักให้ครบ 3 เล่มน้า)</p>
+    <div class="mobile-container">
+        <!-- พื้นหลังหัวใจและอิโมจิลอยขึ้นมา -->
+        <div class="floating-bg" id="floatingBg"></div>
 
+        <!-- หัวข้อ -->
+        <div class="header-section">
+            <h2>ปักเทียนกัน 🎂</h2>
+            <p>จิ้มที่เค้กเพื่อปักเทียน</p>
+        </div>
+
+        <!-- เค้กขนาดใหญ่เต็มตา -->
         <div id="cake-container" onclick="plantCandle(event)">
             <img src="cake.png" alt="Anniversary Cake" class="cake-base">
         </div>
 
-        <p id="candle-status">ปักเทียนไปแล้ว: <span id="candle-count">0</span> / 3</p>
-
-        <button id="final-next-btn" class="next-btn" onclick="alert('ไปหน้าถัดไปสำเร็จ!')">
-            Go to Next Page ✨
-        </button>
+        <!-- สถานะและปุ่ม -->
+        <div class="footer-section">
+            <p id="candle-status">ปักเทียนไปแล้ว: <span id="candle-count">0</span> / 6</p>
+            <button id="final-next-btn" class="next-btn" onclick="alert('อธิษฐานเรียบร้อย ไปหน้าถัดไปกันเลย! ✨')">
+                อธิษฐานแล้ว ✨
+            </button>
+        </div>
     </div>
 
     <script>
+        // สร้างอิโมจิหัวใจและของตกแต่งลอยขึ้นมาอัตโนมัติ
+        const emojis = ['💖', '💗', '💓', '🍰', '✨', '💕', '🎂'];
+        const bgContainer = document.getElementById('floatingBg');
+
+        function createFloatingItem() {
+            const item = document.createElement('div');
+            item.className = 'float-item';
+            item.innerText = emojis[Math.floor(Math.random() * emojis.length)];
+            item.style.left = Math.random() * 90 + 5 + '%';
+            item.style.animationDuration = (Math.random() * 3 + 4) + 's';
+            item.style.fontSize = (Math.random() * 1 + 1) + 'rem';
+            bgContainer.appendChild(item);
+
+            setTimeout(() => {
+                item.remove();
+            }, 7000);
+        }
+        setInterval(createFloatingItem, 600);
+
+        // ระบบปักเทียน (ต้องการครบ 6 เล่ม)
         let burnedCandles = 0;
-        const maxCandles = 3;
+        const maxCandles = 6;
 
         function plantCandle(event) {
             if (burnedCandles >= maxCandles) return;
@@ -106,15 +212,16 @@
             const y = event.clientY - rect.top;
 
             const candleImg = document.createElement('img');
-            // สามารถเปลี่ยนเป็น 'candleoff.png' ได้ถ้าต้องการแบบยังไม่จุดไฟ
             candleImg.src = 'candle.png'; 
             candleImg.style.position = 'absolute';
-            candleImg.style.left = `${x - 12}px`;
-            candleImg.style.top = `${y - 45}px`;
-            candleImg.style.width = '24px';
+            // ปรับขนาดเทียนให้ใหญ่ขึ้น ชัดเจนขึ้น (ความกว้าง 42px)
+            candleImg.style.left = `${x - 21}px`;
+            candleImg.style.top = `${y - 85}px`;
+            candleImg.style.width = '42px';
             candleImg.style.pointerEvents = 'none';
             candleImg.style.transform = 'scale(0)';
             candleImg.style.transition = 'transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+            candleImg.style.filter = 'drop-shadow(0 4px 6px rgba(0,0,0,0.2))';
             
             container.appendChild(candleImg);
 
@@ -125,8 +232,10 @@
             burnedCandles++;
             document.getElementById('candle-count').innerText = burnedCandles;
 
+            // เมื่อปักครบ 6 เล่ม ซ่อนตัวนับแล้วแสดงปุ่มอธิษฐาน
             if (burnedCandles === maxCandles) {
-                document.getElementById('candle-status').innerHTML = '🎉 เย้! ปักเทียนครบแล้ว อธิษฐานกันเถอะ!';
+                document.getElementById('candle-status.innerText') // ข้าม
+                document.getElementById('candle-status').innerHTML = '🎉 ปักครบ 6 เล่มแล้ว หลับตาอธิษฐานกันเถอะ!';
                 document.getElementById('final-next-btn').style.display = 'inline-block';
             }
         }
