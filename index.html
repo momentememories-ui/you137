@@ -290,13 +290,49 @@
             justify-content: center; align-items: center; z-index: 400;
             transition: background-color 0.5s ease;
         }
-        #note-img-display {
-            width: 95%; 
-            max-width: 450px; 
-            height: auto;
+
+        .note-wrapper {
             position: absolute;
+            width: 95%;
+            max-width: 450px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
             transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1);
             transform-origin: center center;
+        }
+
+        #note-img-display {
+            width: 100%; 
+            height: auto;
+            display: block;
+        }
+
+        /* ปุ่มปิดลอยอยู่มุมขวาบน */
+        .close-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 44px;
+            height: 44px;
+            background: rgba(255, 255, 255, 0.85);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 22px;
+            color: #333;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            cursor: pointer;
+            z-index: 500;
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            border: 1px solid rgba(255,255,255,0.5);
+            transition: transform 0.2s, background-color 0.2s;
+        }
+        .close-btn:active {
+            transform: scale(0.9);
+            background: rgba(255, 255, 255, 1);
         }
 
         .pop-emoji {
@@ -341,7 +377,7 @@
     <!-- ==================== PAGE 1: หน้าเค้ก ==================== -->
     <div id="page-cake" class="page-section active">
         <div id="page6">
-            <div id="instruction" class="instruction-text">มาปักเทียนกันนะ 🕯️✨ แตะที่เค้กสิ</div>
+            <div id="instruction" class="instruction-text">มาปักเทียนกันนะ 🕯️✨<br>แตะที่เค้กสิ</div>
 
             <div id="cake-container" onclick="plantCandle(event)">
                 <img src="cake.png" alt="Anniversary Cake" class="cake-base">
@@ -366,6 +402,7 @@
         <img id="box-btn" src="box.png" onclick="openNote(this)">
 
         <div id="photo-viewer" onclick="closePhoto()">
+            <div class="close-btn" onclick="closePhoto()">✕</div>
             <div id="active-view-card" class="view-card" onclick="event.stopPropagation()">
                 <img id="view-img" src="">
                 <div id="view-caption" class="view-caption"></div>
@@ -373,7 +410,10 @@
         </div>
 
         <div id="overlay" onclick="closeNote()">
-            <img id="note-img-display" src="note.png" onclick="event.stopPropagation()">
+            <div class="close-btn" onclick="closeNote()">✕</div>
+            <div id="note-wrapper" class="note-wrapper" onclick="event.stopPropagation()">
+                <img id="note-img-display" src="note.png">
+            </div>
         </div>
     </div>
 
@@ -426,7 +466,7 @@
             plantedCandles++;
 
             if (plantedCandles === maxCandles) {
-                document.getElementById('instruction').innerText = 'เย้! อธิษฐานแล้วเป่าเทียนกันนะ 🎂✨';
+                document.getElementById('instruction').innerText = 'เย้!<br>อธิษฐานแล้วเป่าเทียนกันนะ 🎂✨';
                 const btn = document.getElementById('action-btn');
                 btn.innerText = 'แตะเพื่อเป่า 🕯️';
                 btn.style.display = 'inline-block';
@@ -730,27 +770,27 @@
         function openNote(element) {
             currentOriginElement = element;
             const overlay = document.getElementById('overlay');
-            const noteDisplay = document.getElementById('note-img-display');
+            const noteWrapper = document.getElementById('note-wrapper');
             
             const rect = element.getBoundingClientRect();
             const startLeft = rect.left + (rect.width / 2);
             const startTop = rect.top + (rect.height / 2);
             
-            noteDisplay.style.transition = 'none';
-            noteDisplay.style.left = startLeft + 'px';
-            noteDisplay.style.top = startTop + 'px';
-            noteDisplay.style.transform = 'translate(-50%, -50%) scale(0.1)';
-            noteDisplay.style.opacity = '0';
+            noteWrapper.style.transition = 'none';
+            noteWrapper.style.left = startLeft + 'px';
+            noteWrapper.style.top = startTop + 'px';
+            noteWrapper.style.transform = 'translate(-50%, -50%) scale(0.1)';
+            noteWrapper.style.opacity = '0';
             
             overlay.style.display = 'flex';
             
             setTimeout(() => {
                 overlay.style.backgroundColor = 'rgba(0,0,0,0.9)';
-                noteDisplay.style.transition = 'all 0.5s cubic-bezier(0.25, 1, 0.5, 1)';
-                noteDisplay.style.left = '50%';
-                noteDisplay.style.top = '50%';
-                noteDisplay.style.transform = 'translate(-50%, -50%) scale(1)';
-                noteDisplay.style.opacity = '1';
+                noteWrapper.style.transition = 'all 0.5s cubic-bezier(0.25, 1, 0.5, 1)';
+                noteWrapper.style.left = '50%';
+                noteWrapper.style.top = '50%';
+                noteWrapper.style.transform = 'translate(-50%, -50%) scale(1)';
+                noteWrapper.style.opacity = '1';
                 startEmojiBurst();
             }, 20);
         }
@@ -758,7 +798,7 @@
         function closeNote() {
             stopEmojiBurst();
             const overlay = document.getElementById('overlay');
-            const noteDisplay = document.getElementById('note-img-display');
+            const noteWrapper = document.getElementById('note-wrapper');
             
             if (currentOriginElement) {
                 const rect = currentOriginElement.getBoundingClientRect();
@@ -766,10 +806,10 @@
                 const endTop = rect.top + (rect.height / 2);
                 
                 overlay.style.backgroundColor = 'rgba(0,0,0,0)';
-                noteDisplay.style.left = endLeft + 'px';
-                noteDisplay.style.top = endTop + 'px';
-                noteDisplay.style.transform = 'translate(-50%, -50%) scale(0.1)';
-                noteDisplay.style.opacity = '0';
+                noteWrapper.style.left = endLeft + 'px';
+                noteWrapper.style.top = endTop + 'px';
+                noteWrapper.style.transform = 'translate(-50%, -50%) scale(0.1)';
+                noteWrapper.style.opacity = '0';
                 
                 setTimeout(() => {
                     overlay.style.display = 'none';
