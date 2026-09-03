@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Make a Wish & Memory Garden</title>
+    <title>Happy Birthday</title>
     <!-- นำเข้าฟอนต์ KaTeX และ Prompt -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;600&display=swap" rel="stylesheet">
@@ -44,7 +44,7 @@
             display: flex;
         }
 
-        /* ==================== STYLE หน้าเค้ก (ห้ามแก้) ==================== */
+        /* ==================== STYLE หน้าเค้ก ==================== */
         #page-cake {
             font-family: 'KaTeX_Main', 'Times New Roman', serif;
             justify-content: center;
@@ -170,7 +170,7 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            touch-action: manipulation;
+            touch-action: none;
         }
 
         .butterfly {
@@ -201,16 +201,17 @@
         #main-plant-img {
             max-width: 100%; max-height: 100%;
             object-fit: contain;
-            transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transform-origin: center bottom;
         }
 
         /* อนิเมชันสำหรับสั่นช่อดอกไม้เพื่อดึงดูดสายตา */
         @keyframes bouquetWobble {
-            0% { transform: scale(1.15) rotate(0deg); }
-            25% { transform: scale(1.18) rotate(-3deg); }
-            50% { transform: scale(1.15) rotate(3deg); }
-            75% { transform: scale(1.18) rotate(-2deg); }
-            100% { transform: scale(1.15) rotate(0deg); }
+            0% { transform: scale(1) rotate(0deg); }
+            25% { transform: scale(1.03) rotate(-3deg); }
+            50% { transform: scale(1) rotate(3deg); }
+            75% { transform: scale(1.03) rotate(-2deg); }
+            100% { transform: scale(1) rotate(0deg); }
         }
         .wobble-active {
             animation: bouquetWobble 1.5s ease-in-out infinite !important;
@@ -528,7 +529,7 @@
                     waterCan.style.display = "block";
                     waterCan.style.left = (e.clientX - 40) + "px";
                     waterCan.style.top = (e.clientY - 40) + "px";
-                    plantImg.style.transform = "scale(1.05)";
+                    plantImg.style.transform = "scale(1.02)";
                     setTimeout(() => plantImg.style.transform = "scale(1)", 50);
                 }
             });
@@ -537,8 +538,8 @@
 
             nongImg.onclick = () => {
                 if (!isBouquetStage) {
-                    plantImg.style.transform = "scale(0.3)"; 
                     plantImg.src = 'bouquet.png'; 
+                    plantImg.style.transform = "scale(1)"; 
                     
                     setTimeout(() => {
                         // สั่นช่อดอกไม้เพื่อดึงดูดสายตา
@@ -556,7 +557,7 @@
                             if (bgMusic.paused) bgMusic.play().catch(e => console.log(e));
                             // กดแล้วหยุดสั่นช่อดอกไม้ทันที
                             plantImg.classList.remove('wobble-active');
-                            plantImg.style.transform = "scale(1.15) rotate(0deg)";
+                            plantImg.style.transform = "scale(1) rotate(0deg)";
                             explode();
                         };
                     }, 100);
