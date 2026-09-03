@@ -66,36 +66,42 @@
             }
         }
 
-        /* ข้อความคำสั่ง ขยับลงมาประมาณ 3 cm (ประมาณ 110px) */
+        /* ข้อความคำสั่ง ขยับลงมา 3 ซม. (110px) */
         .instruction-text {
             color: #ff4d6d;
             font-size: 1.4rem;
             font-weight: bold;
             z-index: 10;
-            margin-top: 110px; /* ขยับลงมาจากด้านบน 3 ซม. */
+            margin-top: 110px;
             min-height: 2.5rem;
             text-align: center;
             padding: 0 10px;
+            position: absolute;
+            top: 0;
+            width: 100%;
         }
 
-        /* พื้นที่วางเค้กขยายเต็มหน้าจอ */
+        /* พื้นที่วางเค้กขยายใหญ่เต็มหน้าจอและจัดให้อยู่ตรงกลางพอดี */
         #cake-container {
-            position: relative;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
             cursor: pointer;
             width: 100vw;
-            height: 50vh;
+            height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
             z-index: 10;
         }
 
-        /* ขยายภาพเค้กให้กว้างเต็มหน้าจอ */
+        /* ขยายภาพเค้กให้ใหญ่เต็มหน้าจอ */
         #cake-container img.cake-base {
-            width: 95vw;
-            max-width: 420px;
-            height: auto;
-            max-height: 48vh;
+            width: 100vw;
+            max-width: 450px;
+            height: 100vh;
+            max-height: 600px;
             object-fit: contain;
             pointer-events: none;
         }
@@ -103,7 +109,7 @@
         /* สไตล์เทียนขนาดใหญ่ */
         .candle-item {
             position: absolute;
-            width: 65px; /* เทียนขนาดใหญ่ชัดเจน */
+            width: 65px;
             height: auto;
             pointer-events: none;
             transform: scale(0);
@@ -126,7 +132,8 @@
             box-shadow: 0 6px 20px rgba(255, 77, 109, 0.4);
             transition: transform 0.2s;
             z-index: 30;
-            margin-bottom: 50px;
+            position: absolute;
+            bottom: 50px;
         }
 
         .action-btn:active {
@@ -140,7 +147,7 @@
         <!-- ข้อความคำสั่ง -->
         <div id="instruction" class="instruction-text">ปักเทียนกัน แตะที่เค้กสิ</div>
 
-        <!-- เค้ก -->
+        <!-- เค้กจัดกลางหน้าจอพอดี -->
         <div id="cake-container" onclick="plantCandle(event)">
             <img src="cake.png" alt="Anniversary Cake" class="cake-base">
         </div>
@@ -180,7 +187,6 @@
         let isBlown = false;
 
         function plantCandle(event) {
-            // ปักเทียนครบ 6 เล่มแล้วจะไม่สามารถปักเพิ่มได้
             if (plantedCandles >= maxCandles) return;
 
             const container = document.getElementById('cake-container');
@@ -221,10 +227,10 @@
             const btn = document.getElementById('action-btn');
 
             if (!isBlown) {
-                // เปลี่ยนไฟล์รูปภาพเทียนเป็น candleoff.png ทุกเล่มตรงตำแหน่งเดิม
+                // เปลี่ยนไฟล์รูปภาพเทียนเป็น candle-off.png ทุกเล่มตรงตำแหน่งเดิม
                 const candles = document.querySelectorAll('.candle-placed');
                 candles.forEach(candle => {
-                    candle.src = 'candleoff.png';
+                    candle.src = 'candle-off.png';
                 });
 
                 isBlown = true;
@@ -233,7 +239,6 @@
                 document.getElementById('instruction').innerText = '';
                 btn.innerText = 'ช่วยเค้ารดน้ำต้นไม้หน่อยนะ 🪴';
             } else {
-                // Action เมื่อกดปุ่มรดน้ำต้นไม้
                 alert('ไปหน้ารดน้ำต้นไม้กันเลย! 🌱');
             }
         }
