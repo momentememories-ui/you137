@@ -28,7 +28,7 @@
             width: 100vw;
             height: 100vh;
             max-width: 420px;
-            max-height: calc(420px * (16 / 9)); /* อัตราส่วน 9:16 แนวตั้ง (16:9 เมื่อกลับด้าน) หรือใช้ max-height: 844px มาตรฐาน */
+            max-height: calc(420px * (16 / 9));
             aspect-ratio: 9 / 16;
             background-color: #fff0f5;
             display: flex;
@@ -73,11 +73,12 @@
             }
         }
 
-        /* ส่วนหัวข้อ */
+        /* ส่วนหัวข้อ (ขยับลงมาตามที่กำหนด) */
         .header-section {
             z-index: 2;
             text-align: center;
-            margin-top: 5px;
+            margin-top: 30%; /* ขยับหัวข้อลงมาประมาณ 30% */
+            transition: opacity 0.3s ease;
         }
         h2 {
             color: #ff4d6d;
@@ -90,6 +91,7 @@
             color: #d85c78;
             font-size: 0.9rem;
             font-weight: 600;
+            margin-top: 80%; /* ขยับคำว่า จิ้มที่เค้ก เพื่อปักเทียน ลงมา 80% จากตัวหัวข้อหลัก */
         }
 
         /* พื้นที่เค้ก */
@@ -104,7 +106,6 @@
             z-index: 2;
             margin: 5px 0;
         }
-        /* เล็กลง 10% จากเดิม max-width 360px เหลือประมาณ 324px */
         .cake-base {
             width: 80%;
             max-width: 324px;
@@ -114,7 +115,7 @@
             filter: drop-shadow(0 8px 16px rgba(0,0,0,0.08));
         }
 
-        /* ส่วนล่าง แสดงจำนวนเทียนและปุ่ม */
+        /* ส่วนล่าง แสดงข้อความและปุ่มเป่าเทียน */
         .footer-section {
             z-index: 2;
             width: 100%;
@@ -130,6 +131,7 @@
             font-weight: 700;
             font-size: 1.05rem;
             margin-bottom: 8px;
+            display: none; /* ซ่อนไว้ก่อนจนกว่าจะปักครบ 6 เล่ม */
         }
         .action-btn {
             display: none;
@@ -161,7 +163,7 @@
         <div class="floating-bg" id="floatingBg"></div>
 
         <!-- หัวข้อ -->
-        <div class="header-section">
+        <div class="header-section" id="headerSection">
             <h2>ปักเทียนกัน 🎂</h2>
             <p>จิ้มที่เค้กเพื่อปักเทียน</p>
         </div>
@@ -173,9 +175,9 @@
 
         <!-- สถานะและปุ่ม -->
         <div class="footer-section">
-            <p id="candle-status">ปักเทียนไปแล้ว: <span id="candle-count">0</span> / 6</p>
+            <p id="candle-status">เย้ ปักครบแล้ว อธิษฐานแล้วเป่าเลย</p>
             <button id="action-btn" class="action-btn" onclick="blowCandles()">
-                เป่าเทียนเลย 💨✨
+                กดเพื่อเป่าเทียน 💨✨
             </button>
         </div>
     </div>
@@ -207,6 +209,13 @@
         function plantCandle(event) {
             if (burnedCandles >= maxCandles) return;
 
+            // เมื่อกดปักเทียนเล่มที่ 1 ให้ซ่อนข้อความหัวข้อทั้งหมดทันที
+            if (burnedCandles === 0) {
+                const header = document.getElementById('headerSection');
+                header.style.opacity = '0';
+                setTimeout(() => { header.style.display = 'none'; }, 300);
+            }
+
             const container = document.getElementById('cake-container');
             const rect = container.getBoundingClientRect();
 
@@ -216,9 +225,9 @@
             const candleImg = document.createElement('img');
             candleImg.src = 'candle.png'; 
             candleImg.style.position = 'absolute';
-            // เทียนใหญ่ขึ้น 10% จากเดิมกว้าง 42px เป็นประมาณ 46px
+            // ปรับตำแหน่งให้ตรงกับจุดที่จิ้มเป๊ะๆ (ไม่ต้องเผื่อขึ้นข้างบนเยอะเกินไป)
             candleImg.style.left = `${x - 23}px`;
-            candleImg.style.top = `${y - 93}px`;
+            candleImg.style.top = `${y - 45}px`;
             candleImg.style.width = '46px';
             candleImg.style.pointerEvents = 'none';
             candleImg.style.transform = 'scale(0)';
@@ -232,30 +241,24 @@
             }, 50);
 
             burnedCandles++;
-            document.getElementById('candle-count').innerText = burnedCandles;
 
-            // เมื่อปักครบ 6 เล่ม ซ่อนตัวนับแล้วแสดงข้อความและปุ่มเป่าเทียน
+            // เมื่อปักครบ 6 เล่ม ให้แสดงข้อความและปุ่มกดเพื่อเป่าเทียน
             if (burnedCandles === maxCandles) {
-                document.getElementById('candle-status').innerHTML = '✨ เย้! อธิษฐานแล้วเป่าเลย';
-                const btn = document.getElementById('action-btn');
-                btn.style.display = 'inline-block';
+                document.getElementById('candle-status').style.display = 'block';
+                document.getElementById('action-btn').style.display = 'inline-block';
             }
         }
 
         // ฟังก์ชันเมื่อกดปุ่มเป่าเทียน
         function blowCandles() {
-            // สามารถเปลี่ยนเป็นเปลี่ยนรูปเทียนเป็นแบบดับ (เช่น candleoff.png) หรือเอฟเฟกต์อื่นๆ ได้ตามต้องการ
             const candles = document.querySelectorAll('#cake-container img[src="candle.png"]');
             candles.forEach(c => {
-                c.src = 'candleoff.png'; // เปลี่ยนเป็นเทียนดับ (ถ้ามีไฟล์) หรือลดความสว่าง
+                c.src = 'candleoff.png'; 
                 c.style.filter = 'grayscale(30%) drop-shadow(0 2px 4px rgba(0,0,0,0.1))';
             });
 
-            document.getElementById('candle-status').innerHTML = '🎉 เย่! เป่าเทียนเรียบร้อยแล้ว ขอให้คำอธิษฐานเป็นจริงนะ ❤️';
+            document.getElementById('candle-status').innerHTML = '🎉 เป่าเทียนเรียบร้อยแล้ว ขอให้คำอธิษฐานเป็นจริงนะ ❤️';
             document.getElementById('action-btn').style.display = 'none';
-
-            // หากต้องการให้ไปหน้าถัดไปต่อ สามารถใส่ฟังก์ชัน navigateTo('page7') ตรงนี้เพิ่มได้หลังจากเป่าเสร็จ
-            // setTimeout(() => { navigateTo('page7'); }, 2000);
         }
     </script>
 </body>
