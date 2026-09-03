@@ -66,13 +66,13 @@
             }
         }
 
-        /* ข้อความคำสั่ง ขยับลงมา 3 ซม. (110px) */
+        /* ข้อความคำสั่ง ขยับขึ้นไปอีก 2 ซม. (ปรับ margin-top เหลือ ~35px) */
         .instruction-text {
             color: #ff4d6d;
             font-size: 1.4rem;
             font-weight: bold;
             z-index: 10;
-            margin-top: 110px;
+            margin-top: 35px;
             min-height: 2.5rem;
             text-align: center;
             padding: 0 10px;
@@ -81,10 +81,10 @@
             width: 100%;
         }
 
-        /* พื้นที่วางเค้กจัดกลางหน้าจอพอดี */
+        /* พื้นที่วางเค้ก ขยับลงมาจากจุดกลางอีก 1 ซม. (~38px) */
         #cake-container {
             position: absolute;
-            top: 50%;
+            top: calc(50% + 38px);
             left: 50%;
             transform: translate(-50%, -50%);
             cursor: pointer;
@@ -96,12 +96,12 @@
             z-index: 10;
         }
 
-        /* ขยายภาพเค้กขึ้นอีก 15% */
+        /* ภาพเค้กขนาดใหญ่ */
         #cake-container img.cake-base {
             width: 115vw;
-            max-width: 517px; /* 450px + 15% */
+            max-width: 517px;
             height: 100vh;
-            max-height: 690px; /* 600px + 15% */
+            max-height: 690px;
             object-fit: contain;
             pointer-events: none;
         }
@@ -173,7 +173,7 @@
         <!-- ข้อความคำสั่ง -->
         <div id="instruction" class="instruction-text">ปักเทียนกัน แตะที่เค้กสิ</div>
 
-        <!-- เค้กจัดกลางหน้าจอพอดี -->
+        <!-- เค้กจัดตำแหน่งขยับลงมา 1 ซม. -->
         <div id="cake-container" onclick="plantCandle(event)">
             <img src="cake.png" alt="Anniversary Cake" class="cake-base">
         </div>
