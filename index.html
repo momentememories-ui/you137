@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Make a Wish - Anniversary</title>
-    <link href="https://fonts.googleapis.com/css2?family=Kmitl&family=Prompt:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
         * {
             box-sizing: border-box;
@@ -23,24 +23,25 @@
             position: relative;
         }
 
-        /* จำลองขนาดหน้าจอมือถือแนวตั้งแบบเต็มจอ */
+        /* ล็อกสัดส่วนหน้าจอ 16:9 สำหรับมือถือพอดี ไม่เลื่อนไปเลื่อนมา */
         .mobile-container {
-            width: 100%;
-            max-width: 430px;
-            height: 100%;
-            max-height: 932px;
+            width: 100vw;
+            height: 100vh;
+            max-width: 420px;
+            max-height: calc(420px * (16 / 9)); /* อัตราส่วน 9:16 แนวตั้ง (16:9 เมื่อกลับด้าน) หรือใช้ max-height: 844px มาตรฐาน */
+            aspect-ratio: 9 / 16;
             background-color: #fff0f5;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: space-between;
-            padding: 30px 20px;
+            padding: 25px 20px;
             position: relative;
             overflow: hidden;
-            box-shadow: 0 0 20px rgba(255, 182, 193, 0.5);
+            box-shadow: 0 0 25px rgba(255, 182, 193, 0.4);
         }
 
-        /* ตกแต่งพื้นหลังด้วยหัวใจและอิโมจิ ลอยขึ้นมา */
+        /* ตกแต่งพื้นหลังด้วยหัวใจและอิโมจิลอยขึ้นมา */
         .floating-bg {
             position: absolute;
             top: 0;
@@ -76,22 +77,22 @@
         .header-section {
             z-index: 2;
             text-align: center;
-            margin-top: 10px;
+            margin-top: 5px;
         }
         h2 {
             color: #ff4d6d;
-            font-size: 1.6rem;
+            font-size: 1.5rem;
             font-weight: 700;
-            margin-bottom: 5px;
+            margin-bottom: 3px;
             text-shadow: 1px 1px 2px rgba(255,255,255,0.8);
         }
         p {
             color: #d85c78;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             font-weight: 600;
         }
 
-        /* พื้นที่เค้กเต็มจอ */
+        /* พื้นที่เค้ก */
         #cake-container {
             position: relative;
             cursor: pointer;
@@ -101,11 +102,12 @@
             width: 100%;
             flex-grow: 1;
             z-index: 2;
-            margin: 10px 0;
+            margin: 5px 0;
         }
+        /* เล็กลง 10% จากเดิม max-width 360px เหลือประมาณ 324px */
         .cake-base {
-            width: 90%;
-            max-width: 360px;
+            width: 80%;
+            max-width: 324px;
             height: auto;
             display: block;
             user-select: none;
@@ -117,7 +119,7 @@
             z-index: 2;
             width: 100%;
             text-align: center;
-            min-height: 80px;
+            min-height: 75px;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -126,29 +128,29 @@
         #candle-status {
             color: #ff4d6d;
             font-weight: 700;
-            font-size: 1.1rem;
-            margin-bottom: 10px;
+            font-size: 1.05rem;
+            margin-bottom: 8px;
         }
-        .next-btn {
+        .action-btn {
             display: none;
-            padding: 12px 30px;
+            padding: 12px 28px;
             border-radius: 30px;
             border: none;
             background: linear-gradient(135deg, #ff758f, #ff4d6d);
             color: white;
-            font-size: 1.05rem;
+            font-size: 1rem;
             font-weight: bold;
             cursor: pointer;
             box-shadow: 0 6px 20px rgba(255,77,109,0.4);
             transition: transform 0.2s, box-shadow 0.2s;
             animation: bounceBtn 1.5s infinite;
         }
-        .next-btn:active {
+        .action-btn:active {
             transform: scale(0.95);
         }
         @keyframes bounceBtn {
             0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-5px); }
+            50% { transform: translateY(-4px); }
         }
     </style>
 </head>
@@ -164,7 +166,7 @@
             <p>จิ้มที่เค้กเพื่อปักเทียน</p>
         </div>
 
-        <!-- เค้กขนาดใหญ่เต็มตา -->
+        <!-- เค้กขนาด (เล็กลง 10%) -->
         <div id="cake-container" onclick="plantCandle(event)">
             <img src="cake.png" alt="Anniversary Cake" class="cake-base">
         </div>
@@ -172,8 +174,8 @@
         <!-- สถานะและปุ่ม -->
         <div class="footer-section">
             <p id="candle-status">ปักเทียนไปแล้ว: <span id="candle-count">0</span> / 6</p>
-            <button id="final-next-btn" class="next-btn" onclick="alert('อธิษฐานเรียบร้อย ไปหน้าถัดไปกันเลย! ✨')">
-                อธิษฐานแล้ว ✨
+            <button id="action-btn" class="action-btn" onclick="blowCandles()">
+                เป่าเทียนเลย 💨✨
             </button>
         </div>
     </div>
@@ -198,7 +200,7 @@
         }
         setInterval(createFloatingItem, 600);
 
-        // ระบบปักเทียน (ต้องการครบ 6 เล่ม)
+        // ระบบปักเทียน (ครบ 6 เล่ม)
         let burnedCandles = 0;
         const maxCandles = 6;
 
@@ -214,10 +216,10 @@
             const candleImg = document.createElement('img');
             candleImg.src = 'candle.png'; 
             candleImg.style.position = 'absolute';
-            // ปรับขนาดเทียนให้ใหญ่ขึ้น ชัดเจนขึ้น (ความกว้าง 42px)
-            candleImg.style.left = `${x - 21}px`;
-            candleImg.style.top = `${y - 85}px`;
-            candleImg.style.width = '42px';
+            // เทียนใหญ่ขึ้น 10% จากเดิมกว้าง 42px เป็นประมาณ 46px
+            candleImg.style.left = `${x - 23}px`;
+            candleImg.style.top = `${y - 93}px`;
+            candleImg.style.width = '46px';
             candleImg.style.pointerEvents = 'none';
             candleImg.style.transform = 'scale(0)';
             candleImg.style.transition = 'transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
@@ -232,12 +234,28 @@
             burnedCandles++;
             document.getElementById('candle-count').innerText = burnedCandles;
 
-            // เมื่อปักครบ 6 เล่ม ซ่อนตัวนับแล้วแสดงปุ่มอธิษฐาน
+            // เมื่อปักครบ 6 เล่ม ซ่อนตัวนับแล้วแสดงข้อความและปุ่มเป่าเทียน
             if (burnedCandles === maxCandles) {
-                document.getElementById('candle-status.innerText') // ข้าม
-                document.getElementById('candle-status').innerHTML = '🎉 ปักครบ 6 เล่มแล้ว หลับตาอธิษฐานกันเถอะ!';
-                document.getElementById('final-next-btn').style.display = 'inline-block';
+                document.getElementById('candle-status').innerHTML = '✨ เย้! อธิษฐานแล้วเป่าเลย';
+                const btn = document.getElementById('action-btn');
+                btn.style.display = 'inline-block';
             }
+        }
+
+        // ฟังก์ชันเมื่อกดปุ่มเป่าเทียน
+        function blowCandles() {
+            // สามารถเปลี่ยนเป็นเปลี่ยนรูปเทียนเป็นแบบดับ (เช่น candleoff.png) หรือเอฟเฟกต์อื่นๆ ได้ตามต้องการ
+            const candles = document.querySelectorAll('#cake-container img[src="candle.png"]');
+            candles.forEach(c => {
+                c.src = 'candleoff.png'; // เปลี่ยนเป็นเทียนดับ (ถ้ามีไฟล์) หรือลดความสว่าง
+                c.style.filter = 'grayscale(30%) drop-shadow(0 2px 4px rgba(0,0,0,0.1))';
+            });
+
+            document.getElementById('candle-status').innerHTML = '🎉 เย่! เป่าเทียนเรียบร้อยแล้ว ขอให้คำอธิษฐานเป็นจริงนะ ❤️';
+            document.getElementById('action-btn').style.display = 'none';
+
+            // หากต้องการให้ไปหน้าถัดไปต่อ สามารถใส่ฟังก์ชัน navigateTo('page7') ตรงนี้เพิ่มได้หลังจากเป่าเสร็จ
+            // setTimeout(() => { navigateTo('page7'); }, 2000);
         }
     </script>
 </body>
