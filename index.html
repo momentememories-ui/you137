@@ -2,11 +2,11 @@
 <html lang="th">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
     <title>Happy Birthday</title>
-    
-    <!-- นำเข้าฟอนต์ KaTeX และ Kanit (คณิต) -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600&display=swap" rel="stylesheet">
     
     <style>
@@ -17,7 +17,7 @@
             user-select: none;
             -webkit-user-select: none;
             -webkit-touch-callout: none;
-            touch-action: none; /* บล็อก Gesture และ Zoom ทุกชนิด */
+            font-family: 'Kanit', sans-serif;
         }
 
         /* ล็อกไม่ให้หน้าจอเลื่อน ขยับ หรือ Zoom ได้เด็ดขาด */
@@ -28,7 +28,8 @@
             position: fixed;
             top: 0;
             left: 0;
-            touch-action: none;
+            touch-action: none !important;
+            -ms-touch-action: none !important;
             background-color: #fff0f5;
             font-family: 'Kanit', sans-serif;
         }
@@ -41,7 +42,6 @@
             left: 0;
             display: none;
             overflow: hidden;
-            touch-action: none;
         }
 
         .page-section.active {
@@ -50,7 +50,7 @@
 
         /* ==================== STYLE หน้าเค้ก ==================== */
         #page-cake {
-            font-family: 'Kanit', sans-serif;
+            font-family: 'Kanit', sans-serif !important;
             justify-content: center;
             align-items: center;
         }
@@ -85,7 +85,7 @@
         .instruction-text {
             color: #ff4d6d;
             font-size: 1.4rem;
-            font-weight: 600;
+            font-weight: bold;
             z-index: 10;
             margin-top: 73px;
             min-height: 2.5rem;
@@ -94,6 +94,7 @@
             position: absolute;
             top: 0;
             width: 100%;
+            font-family: 'Kanit', sans-serif;
         }
 
         #cake-container {
@@ -153,9 +154,9 @@
             border: none;
             background: linear-gradient(45deg, #ff4d6d, #ff758f);
             color: white;
-            font-family: 'Kanit', sans-serif;
+            font-family: 'Kanit', sans-serif !important;
             font-size: 1.2rem;
-            font-weight: 600;
+            font-weight: bold;
             cursor: pointer;
             box-shadow: 0 6px 20px rgba(255, 77, 109, 0.4);
             transition: transform 0.2s;
@@ -194,6 +195,7 @@
             z-index: 10; text-align: center; width: 85%;
             text-shadow: 1px 1px 2px rgba(255,255,255,0.8);
             font-weight: 600;
+            font-family: 'Kanit', sans-serif;
         }
 
         #plant-container {
@@ -208,6 +210,7 @@
             transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
+        /* อนิเมชันสำหรับสั่นช่อดอกไม้เพื่อดึงดูดสายตา */
         @keyframes bouquetWobble {
             0% { transform: scale(1.15) rotate(0deg); }
             25% { transform: scale(1.18) rotate(-3deg); }
@@ -266,7 +269,7 @@
             transform-origin: center center;
         }
         .view-card img { width: 100%; height: auto; display: block; margin-bottom: 12px; border-radius: 2px; }
-        .view-caption { text-align: center; color: #444; font-size: 0.85rem; font-weight: 600; }
+        .view-caption { text-align: center; color: #444; font-size: 0.85rem; font-weight: 600; font-family: 'Kanit', sans-serif; }
 
         #touch-area { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 6; cursor: pointer; }
         #watering-can-img { position: fixed; width: 80px; height: 80px; pointer-events: none; display: none; z-index: 100; transform: rotate(-20deg); }
@@ -309,10 +312,8 @@
 </head>
 <body>
 
-    <!-- ระบบเล่นเพลง วนซ้ำตลอดการใช้งาน -->
     <audio id="bg-music" src="song.mp3" loop></audio>
 
-    <!-- ==================== PAGE 1: หน้าเค้ก ==================== -->
     <div id="page-cake" class="page-section active">
         <div id="page6">
             <div id="instruction" class="instruction-text">มาปักเทียนกันนะ 🕯️✨ แตะที่เค้กสิ</div>
@@ -325,7 +326,6 @@
         </div>
     </div>
 
-    <!-- ==================== PAGE 2: หน้ารดน้ำต้นไม้ ==================== -->
     <div id="page-garden" class="page-section">
         <h1 id="status-text">ที่รักช่วยรดน้ำให้ต้นไม้ต้นนี้หน่อยนะ🌱💗</h1>
 
@@ -351,20 +351,15 @@
         </div>
     </div>
 
-    <!-- ==================== SCRIPT ล็อกป้องกันการ ZOOM ==================== -->
     <script>
-        // บล็อก Gesture การขยาย/บีบหน้าจอ (Pinch Zoom)
         document.addEventListener('gesturestart', function (e) {
             e.preventDefault();
         });
-        document.addEventListener('gesturechange', function (e) {
-            e.preventDefault();
-        });
-        document.addEventListener('gestureend', function (e) {
-            e.preventDefault();
-        });
-
-        // บล็อก Double Tap Zoom
+        document.addEventListener('touchmove', function (e) {
+            if (e.scale !== undefined && e.scale !== 1) {
+                e.preventDefault();
+            }
+        }, { passive: false });
         let lastTouchEnd = 0;
         document.addEventListener('touchend', function (e) {
             const now = (new Date()).getTime();
@@ -373,16 +368,8 @@
             }
             lastTouchEnd = now;
         }, false);
-
-        // บล็อกการหมุนลูกกลิ้งเมาส์ร่วมกับ Ctrl (Zoom บนคอม)
-        document.addEventListener('wheel', function (e) {
-            if (e.ctrlKey) {
-                e.preventDefault();
-            }
-        }, { passive: false });
     </script>
 
-    <!-- ==================== SCRIPT หน้าเค้ก ==================== -->
     <script>
         // Floating Emojis พื้นหลังหน้าเค้ก
         const cakeEmojis = ['🌻', '🩷', '🎂'];
@@ -406,6 +393,7 @@
         let isBlown = false;
 
         function plantCandle(event) {
+            // เริ่มเล่นเพลงเมื่อเริ่มมีการปักเทียนเล่มแรก
             const bgMusic = document.getElementById('bg-music');
             if (bgMusic.paused) {
                 bgMusic.play().catch(e => console.log("Music autoplay prevented"));
@@ -472,6 +460,7 @@
                 document.getElementById('instruction').innerText = '';
                 btn.innerText = 'ช่วยเค้ารดน้ำต้นไม้หน่อยนะ 🪴';
             } else {
+                // สลับไปยังหน้ารดน้ำต้นไม้
                 document.getElementById('page-cake').classList.remove('active');
                 document.getElementById('page-garden').classList.add('active');
                 initGardenPage();
@@ -479,7 +468,6 @@
         }
     </script>
 
-    <!-- ==================== SCRIPT หน้ารดน้ำต้นไม้ ==================== -->
     <script>
         function createButterflies() {
             const emojis = ['💗', '🌻'];
@@ -573,6 +561,7 @@
                     plantImg.src = 'bouquet.png'; 
                     
                     setTimeout(() => {
+                        // สั่นช่อดอกไม้เพื่อดึงดูดสายตา
                         plantImg.classList.add('wobble-active');
                     }, 50);
 
@@ -585,6 +574,7 @@
                         plantImg.style.cursor = 'pointer';
                         plantImg.onclick = () => {
                             if (bgMusic.paused) bgMusic.play().catch(e => console.log(e));
+                            // กดแล้วหยุดสั่นช่อดอกไม้ทันที
                             plantImg.classList.remove('wobble-active');
                             plantImg.style.transform = "scale(1.15) rotate(0deg)";
                             explode();
@@ -603,7 +593,7 @@
                 {x: -120, y: -50},                  {x: 120, y: -50}, 
                 {x: -120, y: 40},                   {x: 120, y: 40},  
                 {x: -110, y: 130},  {x: 0, y: 150},  {x: 110, y: 130}, 
-                {x: 0, y: -40}                                      
+                {x: 0, y: -40}                                     
             ];
 
             for (let i = positions.length - 1; i > 0; i--) {
@@ -624,6 +614,8 @@
                 const jitterY = (Math.random() - 0.5) * 15;
                 const finalX = pos.x + jitterX;
                 const finalY = pos.y + jitterY;
+                
+                // สุ่มมุมเอียงระหว่าง -15 ถึง +15 องศา
                 const rotate = (Math.random() - 0.5) * 30;
 
                 setTimeout(() => {
