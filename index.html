@@ -81,7 +81,7 @@
             width: 100%;
         }
 
-        /* พื้นที่วางเค้กขยายใหญ่เต็มหน้าจอและจัดให้อยู่ตรงกลางพอดี */
+        /* พื้นที่วางเค้กจัดกลางหน้าจอพอดี */
         #cake-container {
             position: absolute;
             top: 50%;
@@ -96,12 +96,12 @@
             z-index: 10;
         }
 
-        /* ขยายภาพเค้กให้ใหญ่เต็มหน้าจอ */
+        /* ขยายภาพเค้กขึ้นอีก 15% */
         #cake-container img.cake-base {
-            width: 100vw;
-            max-width: 450px;
+            width: 115vw;
+            max-width: 517px; /* 450px + 15% */
             height: 100vh;
-            max-height: 600px;
+            max-height: 690px; /* 600px + 15% */
             object-fit: contain;
             pointer-events: none;
         }
@@ -115,6 +115,32 @@
             transform: scale(0);
             transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             z-index: 20;
+        }
+
+        /* เอฟเฟกต์ควันตอนเป่าเทียน */
+        .smoke-particle {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: rgba(180, 180, 180, 0.6);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 25;
+            animation: smokeRise 1.2s ease-out forwards;
+        }
+
+        @keyframes smokeRise {
+            0% {
+                opacity: 0.8;
+                transform: translate(0, 0) scale(0.6);
+            }
+            50% {
+                opacity: 0.5;
+            }
+            100% {
+                opacity: 0;
+                transform: translate(var(--dx), -50px) scale(2.2);
+            }
         }
 
         /* ปุ่มแอ็กชันด้านล่าง */
@@ -180,7 +206,7 @@
         setInterval(createFloatingEmoji, 500);
     </script>
 
-    <!-- ลอจิกการปักเทียน และ เป่าเทียน -->
+    <!-- ลอจิกการปักเทียน, เป่าเทียน และเอฟเฟกต์ควัน -->
     <script>
         let plantedCandles = 0;
         const maxCandles = 6;
@@ -223,14 +249,46 @@
             }
         }
 
+        // ฟังก์ชันสร้างเอฟเฟกต์ควันลอยขึ้นจากหัวเทียน
+        function createSmoke(candleEl) {
+            const container = document.getElementById('cake-container');
+            const candleLeft = parseFloat(candleEl.style.left);
+            const candleTop = parseFloat(candleEl.style.top);
+
+            // ตำแหน่งปลายยอดเทียน
+            const flameX = candleLeft + 32;
+            const flameY = candleTop + 10;
+
+            // สร้างก้อนควัน 5 ก้อนกระจายออก
+            for (let i = 0; i < 5; i++) {
+                setTimeout(() => {
+                    const smoke = document.createElement('div');
+                    smoke.className = 'smoke-particle';
+                    smoke.style.left = `${flameX - 10}px`;
+                    smoke.style.top = `${flameY - 10}px`;
+                    
+                    // สุ่มการลอยเบี่ยงซ้าย-ขวา
+                    const dx = (Math.random() - 0.5) * 40;
+                    smoke.style.setProperty('--dx', `${dx}px`);
+
+                    container.appendChild(smoke);
+
+                    setTimeout(() => {
+                        smoke.remove();
+                    }, 1200);
+                }, i * 150);
+            }
+        }
+
         function handleButtonClick() {
             const btn = document.getElementById('action-btn');
 
             if (!isBlown) {
-                // เปลี่ยนไฟล์รูปภาพเทียนเป็น candle-off.png ทุกเล่มตรงตำแหน่งเดิม
+                // เปลี่ยนไฟล์รูปภาพเทียนเป็น candle-off.png พร้อมสร้างเอฟเฟกต์ควัน
                 const candles = document.querySelectorAll('.candle-placed');
                 candles.forEach(candle => {
                     candle.src = 'candle-off.png';
+                    createSmoke(candle);
                 });
 
                 isBlown = true;
