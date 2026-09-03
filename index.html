@@ -1,20 +1,93 @@
-<!-- Page 6: หน้าปักเทียน -->
-    <div id="page6" class="page" style="display: none; background-color: #fff0f5; flex-direction: column; align-items: center; justify-content: center; padding: 40px 20px; height: 100vh; position: relative; text-align: center;">
-        
-        <h2 style="color: #ff4d6d; margin-bottom: 10px; font-family: 'Fredoka', cursive;">Make a Wish! 🎂</h2>
-        <p style="color: #666; font-size: 0.95rem; margin-bottom: 30px;">จิ้มที่เค้กเพื่อปักเทียนวันครบรอบของเรากันนะ (ปักให้ครบ 3 เล่มน้า)</p>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Make a Wish - Anniversary</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: 'Fredoka', cursive, sans-serif;
+            background-color: #fff0f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+        .page {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+            width: 100%;
+            height: 100%;
+            position: relative;
+            text-align: center;
+        }
+        h2 {
+            color: #ff4d6d;
+            margin-bottom: 10px;
+        }
+        p {
+            color: #666;
+            font-size: 0.95rem;
+            margin-bottom: 20px;
+        }
+        #cake-container {
+            position: relative;
+            cursor: pointer;
+            display: inline-block;
+        }
+        #cake-container img.cake-base {
+            width: 240px;
+            display: block;
+            user-select: none;
+        }
+        #candle-status {
+            margin-top: 25px;
+            color: #ff758f;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+        .next-btn {
+            display: none;
+            margin-top: 20px;
+            padding: 12px 25px;
+            border-radius: 25px;
+            border: none;
+            background: #ff4d6d;
+            color: white;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(255,77,109,0.3);
+            transition: transform 0.2s;
+        }
+        .next-btn:active {
+            transform: scale(0.95);
+        }
+    </style>
+</head>
+<body>
 
-        <!-- พื้นสำหรับวางเค้กและปักเทียน -->
-        <div id="cake-container" onclick="plantCandle(event)" style="position: relative; cursor: pointer; display: inline-block;">
-            <!-- รูปเค้กหลัก -->
-            <img src="cake.png" alt="Anniversary Cake" style="width: 240px; display: block; user-select: none;">
+    <div id="page6" class="page">
+        <h2>Make a Wish! 🎂</h2>
+        <p>จิ้มที่เค้กเพื่อปักเทียนวันครบรอบของเรากันนะ (ปักให้ครบ 3 เล่มน้า)</p>
+
+        <div id="cake-container" onclick="plantCandle(event)">
+            <img src="cake.png" alt="Anniversary Cake" class="cake-base">
         </div>
 
-        <!-- ข้อความบอกสถานะ -->
-        <p id="candle-status" style="margin-top: 20px; color: #ff758f; font-weight: 600; font-size: 1.1rem;">ปักเทียนไปแล้ว: <span id="candle-count">0</span> / 3</p>
+        <p id="candle-status">ปักเทียนไปแล้ว: <span id="candle-count">0</span> / 3</p>
 
-        <!-- ปุ่มไปหน้าถัดไป -->
-        <button id="final-next-btn" class="next-btn" onclick="navigateTo('page7')" style="display: none; margin-top: 20px; padding: 12px 25px; border-radius: 25px; border: none; background: #ff4d6d; color: white; font-size: 1rem; font-weight: bold; cursor: pointer; box-shadow: 0 4px 15px rgba(255,77,109,0.3);">
+        <button id="final-next-btn" class="next-btn" onclick="alert('ไปหน้าถัดไปสำเร็จ!')">
             Go to Next Page ✨
         </button>
     </div>
@@ -29,12 +102,11 @@
             const container = document.getElementById('cake-container');
             const rect = container.getBoundingClientRect();
 
-            // คำนวณตำแหน่งที่คลิกบนรูปเค้ก
             const x = event.clientX - rect.left;
             const y = event.clientY - rect.top;
 
-            // สร้างรูปเทียน (ใช้ candle.png หรือ candleoff.png ตามต้องการ)
             const candleImg = document.createElement('img');
+            // สามารถเปลี่ยนเป็น 'candleoff.png' ได้ถ้าต้องการแบบยังไม่จุดไฟ
             candleImg.src = 'candle.png'; 
             candleImg.style.position = 'absolute';
             candleImg.style.left = `${x - 12}px`;
@@ -46,7 +118,6 @@
             
             container.appendChild(candleImg);
 
-            // เล่นอนิเมชันเด้งปักลงมา
             setTimeout(() => {
                 candleImg.style.transform = 'scale(1)';
             }, 50);
@@ -54,10 +125,11 @@
             burnedCandles++;
             document.getElementById('candle-count').innerText = burnedCandles;
 
-            // ถ้าปักครบตามจำนวน
             if (burnedCandles === maxCandles) {
                 document.getElementById('candle-status').innerHTML = '🎉 เย้! ปักเทียนครบแล้ว อธิษฐานกันเถอะ!';
                 document.getElementById('final-next-btn').style.display = 'inline-block';
             }
         }
     </script>
+</body>
+</html>
