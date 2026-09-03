@@ -1,0 +1,63 @@
+<!-- Page 6: หน้าปักเทียน -->
+    <div id="page6" class="page" style="display: none; background-color: #fff0f5; flex-direction: column; align-items: center; justify-content: center; padding: 40px 20px; height: 100vh; position: relative; text-align: center;">
+        
+        <h2 style="color: #ff4d6d; margin-bottom: 10px; font-family: 'Fredoka', cursive;">Make a Wish! 🎂</h2>
+        <p style="color: #666; font-size: 0.95rem; margin-bottom: 30px;">จิ้มที่เค้กเพื่อปักเทียนวันครบรอบของเรากันนะ (ปักให้ครบ 3 เล่มน้า)</p>
+
+        <!-- พื้นสำหรับวางเค้กและปักเทียน -->
+        <div id="cake-container" onclick="plantCandle(event)" style="position: relative; cursor: pointer; display: inline-block;">
+            <!-- รูปเค้กหลัก -->
+            <img src="cake.png" alt="Anniversary Cake" style="width: 240px; display: block; user-select: none;">
+        </div>
+
+        <!-- ข้อความบอกสถานะ -->
+        <p id="candle-status" style="margin-top: 20px; color: #ff758f; font-weight: 600; font-size: 1.1rem;">ปักเทียนไปแล้ว: <span id="candle-count">0</span> / 3</p>
+
+        <!-- ปุ่มไปหน้าถัดไป -->
+        <button id="final-next-btn" class="next-btn" onclick="navigateTo('page7')" style="display: none; margin-top: 20px; padding: 12px 25px; border-radius: 25px; border: none; background: #ff4d6d; color: white; font-size: 1rem; font-weight: bold; cursor: pointer; box-shadow: 0 4px 15px rgba(255,77,109,0.3);">
+            Go to Next Page ✨
+        </button>
+    </div>
+
+    <script>
+        let burnedCandles = 0;
+        const maxCandles = 3;
+
+        function plantCandle(event) {
+            if (burnedCandles >= maxCandles) return;
+
+            const container = document.getElementById('cake-container');
+            const rect = container.getBoundingClientRect();
+
+            // คำนวณตำแหน่งที่คลิกบนรูปเค้ก
+            const x = event.clientX - rect.left;
+            const y = event.clientY - rect.top;
+
+            // สร้างรูปเทียน (ใช้ candle.png หรือ candleoff.png ตามต้องการ)
+            const candleImg = document.createElement('img');
+            candleImg.src = 'candle.png'; 
+            candleImg.style.position = 'absolute';
+            candleImg.style.left = `${x - 12}px`;
+            candleImg.style.top = `${y - 45}px`;
+            candleImg.style.width = '24px';
+            candleImg.style.pointerEvents = 'none';
+            candleImg.style.transform = 'scale(0)';
+            candleImg.style.transition = 'transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+            
+            container.appendChild(candleImg);
+
+            // เล่นอนิเมชันเด้งปักลงมา
+            setTimeout(() => {
+                candleImg.style.transform = 'scale(1)';
+            }, 50);
+
+            burnedCandles++;
+            document.getElementById('candle-count').innerText = burnedCandles;
+
+            // ถ้าปักครบตามจำนวน
+            if (burnedCandles === maxCandles) {
+                document.getElementById('candle-status').innerHTML = '🎉 เย้! ปักเทียนครบแล้ว อธิษฐานกันเถอะ!';
+                document.getElementById('final-next-btn').style.display = 'inline-block';
+            }
+        }
+    </script>
