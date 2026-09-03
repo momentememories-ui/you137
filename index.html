@@ -4,51 +4,53 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Make a Wish</title>
+    <!-- นำเข้าฟอนต์คณิตศาสตร์ (KaTeX Main Font) -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
     <style>
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
+            user-select: none;
+            -webkit-user-select: none;
+            -webkit-touch-callout: none;
         }
 
-        body {
-            /* กำหนดฟอนต์คณิตศาสตร์ */
-            font-family: 'KaTeX_Main', 'Times New Roman', serif;
+        /* ล็อกไม่ให้หน้าจอเลื่อน ขยับ หรือ Zoom ได้เด็ดขาด */
+        html, body {
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            position: fixed;
+            top: 0;
+            left: 0;
+            touch-action: none;
             background-color: #fff0f5;
+            font-family: 'KaTeX_Main', 'Times New Roman', serif;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
-            overflow: hidden;
-            position: relative;
         }
 
-        /* Responsive Mobile Container (อัตราส่วนแนวตั้ง 9:16) */
         .page {
-            width: 100vw;
-            height: 100vh;
+            width: 100%;
+            height: 100%;
             max-width: 450px;
-            max-height: 900px;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: space-between;
-            padding: 40px 20px;
             position: relative;
-            text-align: center;
             overflow: hidden;
-            background-color: #fff0f5;
         }
 
-        /* Floating Emojis Background (ทานตะวัน, หัวใจ, เค้ก) */
+        /* Floating Emojis Background */
         .floating-emoji {
             position: absolute;
             bottom: -50px;
             font-size: 28px;
-            user-select: none;
             pointer-events: none;
-            animation: floatUp 8s linear infinite;
+            animation: floatUp 7s linear infinite;
             z-index: 1;
             opacity: 0.8;
         }
@@ -64,41 +66,44 @@
             }
         }
 
-        /* ข้อความคำสั่ง */
+        /* ข้อความคำสั่ง ขยับลงมาประมาณ 3 cm (ประมาณ 110px) */
         .instruction-text {
             color: #ff4d6d;
-            font-size: 1.5rem;
+            font-size: 1.4rem;
             font-weight: bold;
             z-index: 10;
-            margin-top: 10px;
+            margin-top: 110px; /* ขยับลงมาจากด้านบน 3 ซม. */
             min-height: 2.5rem;
+            text-align: center;
+            padding: 0 10px;
         }
 
-        /* รูปเค้กเต็มหน้าจอ */
+        /* พื้นที่วางเค้กขยายเต็มหน้าจอ */
         #cake-container {
             position: relative;
             cursor: pointer;
-            width: 100%;
-            flex: 1;
+            width: 100vw;
+            height: 50vh;
             display: flex;
             justify-content: center;
             align-items: center;
             z-index: 10;
         }
 
+        /* ขยายภาพเค้กให้กว้างเต็มหน้าจอ */
         #cake-container img.cake-base {
-            width: 100%;
-            max-width: 380px;
-            max-height: 60vh;
+            width: 95vw;
+            max-width: 420px;
+            height: auto;
+            max-height: 48vh;
             object-fit: contain;
-            user-select: none;
-            -webkit-user-drag: none;
+            pointer-events: none;
         }
 
         /* สไตล์เทียนขนาดใหญ่ */
         .candle-item {
             position: absolute;
-            width: 60px; /* ปรับขนาดเทียนให้ใหญ่ขึ้น */
+            width: 65px; /* เทียนขนาดใหญ่ชัดเจน */
             height: auto;
             pointer-events: none;
             transform: scale(0);
@@ -106,25 +111,25 @@
             z-index: 20;
         }
 
-        /* ปุ่มอธิษฐาน */
-        .wish-btn {
+        /* ปุ่มแอ็กชันด้านล่าง */
+        .action-btn {
             display: none;
-            padding: 15px 35px;
+            padding: 14px 30px;
             border-radius: 30px;
             border: none;
             background: linear-gradient(45deg, #ff4d6d, #ff758f);
             color: white;
             font-family: inherit;
-            font-size: 1.3rem;
+            font-size: 1.2rem;
             font-weight: bold;
             cursor: pointer;
             box-shadow: 0 6px 20px rgba(255, 77, 109, 0.4);
-            transition: transform 0.2s, background 0.3s;
-            z-index: 10;
-            margin-bottom: 20px;
+            transition: transform 0.2s;
+            z-index: 30;
+            margin-bottom: 50px;
         }
 
-        .wish-btn:active {
+        .action-btn:active {
             transform: scale(0.95);
         }
     </style>
@@ -132,17 +137,19 @@
 <body>
 
     <div id="page6" class="page">
-        <div id="instruction" class="instruction-text">ปักเทียนกัน</div>
+        <!-- ข้อความคำสั่ง -->
+        <div id="instruction" class="instruction-text">ปักเทียนกัน แตะที่เค้กสิ</div>
 
+        <!-- เค้ก -->
         <div id="cake-container" onclick="plantCandle(event)">
             <img src="cake.png" alt="Anniversary Cake" class="cake-base">
         </div>
 
-        <button id="wish-btn" class="wish-btn" onclick="makeWish()">
-            อธิษฐานกันเถอะ ✨
-        </button>
+        <!-- ปุ่มสำหรับเป่า / ปุ่มรดน้ำต้นไม้ -->
+        <button id="action-btn" class="action-btn" onclick="handleButtonClick()"></button>
     </div>
 
+    <!-- Floating Emojis พื้นหลัง -->
     <script>
         const emojis = ['🌻', '🩷', '🎂'];
         const page = document.getElementById('page6');
@@ -152,9 +159,8 @@
             emojiEl.className = 'floating-emoji';
             emojiEl.innerText = emojis[Math.floor(Math.random() * emojis.length)];
             
-            // สุ่มตำแหน่ง X และระยะเวลาอนิเมชัน
             emojiEl.style.left = Math.random() * 90 + '%';
-            const duration = 6 + Math.random() * 6;
+            const duration = 5 + Math.random() * 5;
             emojiEl.style.animationDuration = `${duration}s`;
             
             page.appendChild(emojiEl);
@@ -164,56 +170,72 @@
             }, duration * 1000);
         }
 
-        // สร้างอิโมจิลอยขึ้นมาเรื่อยๆ
-        setInterval(createFloatingEmoji, 600);
+        setInterval(createFloatingEmoji, 500);
     </script>
 
+    <!-- ลอจิกการปักเทียน และ เป่าเทียน -->
     <script>
         let plantedCandles = 0;
         const maxCandles = 6;
+        let isBlown = false;
 
         function plantCandle(event) {
+            // ปักเทียนครบ 6 เล่มแล้วจะไม่สามารถปักเพิ่มได้
             if (plantedCandles >= maxCandles) return;
 
             const container = document.getElementById('cake-container');
             const rect = container.getBoundingClientRect();
 
-            // คำนวณพิกัดคลิก
+            // คำนวณพิกัดคลิกบนเค้ก
             const x = event.clientX - rect.left;
             const y = event.clientY - rect.top;
 
-            // สร้างรูปเทียน
+            // สร้างภาพเทียน
             const candleImg = document.createElement('img');
             candleImg.src = 'candle.png'; 
-            candleImg.className = 'candle-item';
+            candleImg.className = 'candle-item candle-placed';
             
-            // จัดกึ่งกลางตำแหน่งเทียนตามจุดที่คลิก (ใช้ขนาดเทียน 60px)
-            candleImg.style.left = `${x - 30}px`;
-            candleImg.style.top = `${y - 80}px`;
+            // ปรับตำแหน่งให้กึ่งกลางจุดที่แตะ
+            candleImg.style.left = `${x - 32}px`;
+            candleImg.style.top = `${y - 85}px`;
             
             container.appendChild(candleImg);
 
-            // แสดงเทียนขยายขึ้นมา
+            // แสดงอนิเมชันปักเทียน
             setTimeout(() => {
                 candleImg.style.transform = 'scale(1)';
             }, 50);
 
             plantedCandles++;
 
-            // เมื่อปักเล่มแรก ข้อความแนะนำจะหายไป
-            if (plantedCandles === 1) {
-                document.getElementById('instruction').innerText = '';
-            }
-
-            // เมื่อปักครบ 6 เล่ม แสดงปุ่มอธิษฐาน
+            // เมื่อปักครบ 6 เล่ม
             if (plantedCandles === maxCandles) {
-                document.getElementById('instruction').innerText = '';
-                document.getElementById('wish-btn').style.display = 'inline-block';
+                document.getElementById('instruction').innerText = 'เย้ อธิษฐานแล้วเป่าเลย';
+                const btn = document.getElementById('action-btn');
+                btn.innerText = 'แตะเพื่อเป่า 🕯️';
+                btn.style.display = 'inline-block';
             }
         }
 
-        function makeWish() {
-            alert('ขอให้ความปรารถนาของคุณเป็นจริง! ✨');
+        function handleButtonClick() {
+            const btn = document.getElementById('action-btn');
+
+            if (!isBlown) {
+                // เปลี่ยนไฟล์รูปภาพเทียนเป็น candleoff.png ทุกเล่มตรงตำแหน่งเดิม
+                const candles = document.querySelectorAll('.candle-placed');
+                candles.forEach(candle => {
+                    candle.src = 'candleoff.png';
+                });
+
+                isBlown = true;
+
+                // เปลี่ยนข้อความและปุ่มเป็นขั้นตอนถัดไป
+                document.getElementById('instruction').innerText = '';
+                btn.innerText = 'ช่วยเค้ารดน้ำต้นไม้หน่อยนะ 🪴';
+            } else {
+                // Action เมื่อกดปุ่มรดน้ำต้นไม้
+                alert('ไปหน้ารดน้ำต้นไม้กันเลย! 🌱');
+            }
         }
     </script>
 </body>
